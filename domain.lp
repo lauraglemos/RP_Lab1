@@ -1,25 +1,44 @@
-#const n = 4. % Board size (will be passed as parameter)
-#const m = 7. % Number of filled cells (will be passed as parameter)
-#const k = 7. % Number of thermometers (will be passed as parameter)
-
-% Board size n x n
-cell(1..n, 1..n).
-
-% Define filled cells
-m {filled(X,Y) : cell(X, Y)} m.
-
-% Upper case for heads, lower case for bodies
+#const n = 4.
+#const m = 7.
+#const k = 7.
+cell(1,1).
+cell(1,2).
+cell(1,3).
+cell(1,4).
+cell(2,1).
+cell(2,2).
+cell(2,3).
+cell(2,4).
+cell(3,1).
+cell(3,2).
+cell(3,3).
+cell(3,4).
+cell(4,1).
+cell(4,2).
+cell(4,3).
+cell(4,4).
 orientation(R;U;L;D;r;u;l;d).
-
-k {thermometer(X,Y,O) : cell(X,Y), orientation(O)} k.
-
-
-% Define column and row numbers (this will be created automatically)
-col(1, 3). col(2, 2). col(3, 1). col(4, 1).
-row(1, 1). row(2, 3). row(3, 2). row(4, 1).
-
-% Thermometer facts (this will be created automatically)
-thermometer(1,1, R).
-thermometer(2,1, U). thermometer(2,2,R). thermometer(2,4,D).
-thermometer(3,1,D). thermometer(3,2,D). thermometer(3,3,D).
-
+thermometer(1, 1, "u").
+thermometer(1, 2, "R").
+thermometer(1, 3, "r").
+thermometer(1, 4, "r").
+thermometer(2, 1, "U").
+thermometer(2, 2, "R").
+thermometer(2, 3, "r").
+thermometer(2, 4, "D").
+thermometer(3, 1, "D").
+thermometer(3, 2, "D").
+thermometer(3, 3, "D").
+thermometer(3, 4, "d").
+thermometer(4, 1, "d").
+thermometer(4, 2, "d").
+thermometer(4, 3, "d").
+thermometer(4, 4, "d").
+col(1, 3).
+col(2, 2).
+col(3, 1).
+col(4, 1).
+row(1, 1).
+row(2, 3).
+row(3, 2).
+row(4, 1).

@@ -1,4 +1,3 @@
-import clingo
 import sys
 
 def convert_map_to_facts(input_file, output_file):
@@ -29,54 +28,45 @@ def convert_map_to_facts(input_file, output_file):
     # Calculate constants
     filled_cells = sum(int(x) for x in row_sum_line.split())
     therm_num = sum(line.count(sym) for line in board_lines for sym in head_symbols)
-    
-
-    # Create clingo control
-    # Add constants
-    ctl = clingo.Control(["-c", f"n={len(board_lines)}", "-c", f"m={filled_cells}", "-c", f"k={therm_num}"])
-
-    ctl.load(output_file)
+    n = len(board_lines)
 
 
-    # Add thermometer facts
-    for r, line in enumerate(board_lines, 1):
-        for c, char in enumerate(line, 1):
-            if char in symbol_map:
-                direction = symbol_map[char]
-                ctl.add("base", [], f"thermometer({r},{c},{direction}).")
-            else:
-                print(f"Error: Unrecognized character '{char}' at row {r}, column {c}.")
-                sys.exit(1)
+    try:
+        with open(output_file, 'w') as f_out:
+            # Add constants
+            f_out.write(f"#const n = {n}.\n")
+            f_out.write(f"#const m = {filled_cells}.\n")
+            f_out.write(f"#const k = {therm_num}.\n")
 
-    # Add column and row facts
-    col_sums = col_sum_line.split()
-    for c, total in enumerate(col_sums, 1):
-        ctl.add("base", [], f"col({c}, {total}).")
-    
-    row_sums = row_sum_line.split()
-    for r, total in enumerate(row_sums, 1):
-        ctl.add("base", [], f"row({r}, {total}).")
+            # Add cells
+            for i in range(1,n+1):
+                for j in range(1,n+1):
+                    f_out.write(f"cell({i},{j}).\n")
 
-    # try:
-    #     with open(output_file, 'w') as f_out:
+            # Add orientation fact
+            f_out.write("orientation(R;U;L;D;r;u;l;d).\n")
 
-    #         for r, line in enumerate(board_lines, 1):
-    #             for c, char in enumerate(line, 1):
-    #                 direction = symbol_map.get(char)
-    #                 if direction:
-    #                     f_out.write(f'input({r}, {c}, "{direction}").\n')
+            # Add thermometer facts
+            for r, line in enumerate(board_lines, 1):
+                for c, char in enumerate(line, 1):
+                    direction = symbol_map.get(char)
+                    if direction:
+                        f_out.write(f'thermometer({r}, {c}, "{direction}").\n')
 
-    #         col_sums = col_sum_line.split()
-    #         for c, total in enumerate(col_sums, 1):
-    #             f_out.write(f'col({c}, {total}).\n')
+            # Add column and row facts
+            col_sums = col_sum_line.split()
+            for c, total in enumerate(col_sums, 1):
+                f_out.write(f'col({c}, {total}).\n')
 
-    #         row_sums = row_sum_line.split()
-    #         for r, total in enumerate(row_sums, 1):
-    #             f_out.write(f'row({r}, {total}).\n')
+            row_sums = row_sum_line.split()
+            for r, total in enumerate(row_sums, 1):
+                f_out.write(f'row({r}, {total}).\n')
+
+            
                 
-    # except IOError:
-    #     print(f"Error: Could not write to output file “{output_file}”.")
-    #     sys.exit(1)
+    except IOError:
+        print(f"Error: Could not write to output file “{output_file}”.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

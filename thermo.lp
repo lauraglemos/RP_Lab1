@@ -11,6 +11,11 @@
 
 % definimos cada termómetro -> (bola{1,0}, orientacion{R,U,L,D},longitud{2,n})
 
+% Define filled cells
+m {filled(X,Y) : cell(X, Y)} m.
+
+k {thermometer(X,Y,O) : cell(X,Y), orientation(O)} k.
+
 % Rules and constraints
 is_head(X,Y) :- thermometer(X,Y,O), O = R; O = U; O = L; O = D.
 is_body(X,Y) :- thermometer(X,Y,O), O = r; O = u; O = l; O = d.
