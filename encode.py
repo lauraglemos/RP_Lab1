@@ -1,4 +1,4 @@
-
+import clingo
 import sys
 
 def convert_map_to_facts(input_file, output_file):
@@ -20,29 +20,63 @@ def convert_map_to_facts(input_file, output_file):
 
 
     symbol_map = {
-        'L': 'L', 'R': 'R', 'U': 'U', 'D': 'D', 'V': 'd', '^':'u', '>': 'r', '<':'l'
+        'L': 'L', 'R': 'R', 'U': 'U', 'D': 'D', 'v': 'd', '^':'u', '>': 'r', '<':'l'
     }
 
-    try:
-        with open(output_file, 'w') as f_out:
 
-            for r, line in enumerate(board_lines, 1):
-                for c, char in enumerate(line, 1):
-                    direction = symbol_map.get(char)
-                    if direction:
-                        f_out.write(f'input({r}, {c}, "{direction}").\n')
+    head_symbols = ['R', 'L', 'U', 'D']
 
-            col_sums = col_sum_line.split()
-            for c, total in enumerate(col_sums, 1):
-                f_out.write(f'col({c}, {total}).\n')
+    # Calculate constants
+    filled_cells = sum(int(x) for x in row_sum_line.split())
+    therm_num = sum(line.count(sym) for line in board_lines for sym in head_symbols)
+    
 
-            row_sums = row_sum_line.split()
-            for r, total in enumerate(row_sums, 1):
-                f_out.write(f'row({r}, {total}).\n')
+    # Create clingo control
+    # Add constants
+    ctl = clingo.Control(["-c", f"n={len(board_lines)}", "-c", f"m={filled_cells}", "-c", f"k={therm_num}"])
+
+    ctl.load(output_file)
+
+
+    # Add thermometer facts
+    for r, line in enumerate(board_lines, 1):
+        for c, char in enumerate(line, 1):
+            if char in symbol_map:
+                direction = symbol_map[char]
+                ctl.add("base", [], f"thermometer({r},{c},{direction}).")
+            else:
+                print(f"Error: Unrecognized character '{char}' at row {r}, column {c}.")
+                sys.exit(1)
+
+    # Add column and row facts
+    col_sums = col_sum_line.split()
+    for c, total in enumerate(col_sums, 1):
+        ctl.add("base", [], f"col({c}, {total}).")
+    
+    row_sums = row_sum_line.split()
+    for r, total in enumerate(row_sums, 1):
+        ctl.add("base", [], f"row({r}, {total}).")
+
+    # try:
+    #     with open(output_file, 'w') as f_out:
+
+    #         for r, line in enumerate(board_lines, 1):
+    #             for c, char in enumerate(line, 1):
+    #                 direction = symbol_map.get(char)
+    #                 if direction:
+    #                     f_out.write(f'input({r}, {c}, "{direction}").\n')
+
+    #         col_sums = col_sum_line.split()
+    #         for c, total in enumerate(col_sums, 1):
+    #             f_out.write(f'col({c}, {total}).\n')
+
+    #         row_sums = row_sum_line.split()
+    #         for r, total in enumerate(row_sums, 1):
+    #             f_out.write(f'row({r}, {total}).\n')
                 
-    except IOError:
-        print(f"Error: Could not write to output file “{output_file}”.")
-        sys.exit(1)
+    # except IOError:
+    #     print(f"Error: Could not write to output file “{output_file}”.")
+    #     sys.exit(1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
