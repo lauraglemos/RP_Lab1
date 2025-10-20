@@ -14,23 +14,30 @@
 % Define filled cells
 m {filled(X,Y) : cell(X, Y)} m.
 
-k {thermometer(X,Y,O) : cell(X,Y), orientation(O)} k.
 
 % Rules and constraints
-is_head(X,Y) :- thermometer(X,Y,O), O = R; O = U; O = L; O = D.
-is_body(X,Y) :- thermometer(X,Y,O), O = r; O = u; O = l; O = d.
+is_head(X,Y) :- thermometer(X,Y,O), O = r; O = u; O = l; O = d.
+is_body(X,Y) :- thermometer(X,Y,O), O = r_body; O = u_body; O = l_body; O = d_body.
 
-% Head can always be filled
+% Head must be filled if the next cell in the direction is filled
+:- is_head(X,Y), thermometer(X,Y,O), O = r, not filled(X,Y), filled(X+1, Y).
+:- is_head(X,Y), thermometer(X,Y,O), O = u, not filled(X,Y), filled(X, Y+1).
+:- is_head(X,Y), thermometer(X,Y,O), O = l, not filled(X,Y), filled(X-1, Y).
+:- is_head(X,Y), thermometer(X,Y,O), O = d, not filled(X,Y), filled(X, Y-1).
 
 % Body can be filled if the previous cell is filled
-:- is_body(X,Y), thermometer(X,Y,O), O = r, filled(X,Y), not filled(X-1,Y).
-:- is_body(X,Y), thermometer(X,Y,O), O = u, filled(X,Y), not filled(X,Y-1).
-:- is_body(X,Y), thermometer(X,Y,O), O = l, filled(X,Y), not filled(X+1,Y).
-:- is_body(X,Y), thermometer(X,Y,O), O = d, filled(X,Y), not filled(X,Y+1).
+:- is_body(X,Y), thermometer(X,Y,r_body), filled(X,Y), X > 1, not filled(X-1,Y).
+:- is_body(X,Y), thermometer(X,Y,u_body), filled(X,Y), Y < n, not filled(X,Y+1).
+:- is_body(X,Y), thermometer(X,Y,l_body), filled(X,Y), X < n, not filled(X+1,Y).
+:- is_body(X,Y), thermometer(X,Y,d_body), filled(X,Y), Y > 1, not filled(X,Y-1).
+% Number of filled columns should match the col constraints
+:- col(Y,C), C != #count { X : filled(X,Y) }.
 
-% Filled columns should match the col constraints
+% Number of filled rows should match the row constraints
+:- row(X,C), C != #count { Y : filled(X,Y) }.
 
-% Filled rows should match the row constraints
+#show .
+#show filled/2.
 
 % longitude(1..n).
 % head(0;1).

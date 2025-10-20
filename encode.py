@@ -19,7 +19,7 @@ def convert_map_to_facts(input_file, output_file):
 
 
     symbol_map = {
-        'L': 'L', 'R': 'R', 'U': 'U', 'D': 'D', 'v': 'd', '^':'u', '>': 'r', '<':'l'
+        'L': 'l', 'R': 'r', 'U': 'u', 'D': 'd', 'v': 'd_body', '^':'u_body', '>': 'r_body', '<':'l_body'
     }
 
 
@@ -44,14 +44,14 @@ def convert_map_to_facts(input_file, output_file):
                     f_out.write(f"cell({i},{j}).\n")
 
             # Add orientation fact
-            f_out.write("orientation(R;U;L;D;r;u;l;d).\n")
+            f_out.write("orientation(r;u;l;d;r_body;u_body;l_body;d_body).\n")
 
             # Add thermometer facts
             for r, line in enumerate(board_lines, 1):
                 for c, char in enumerate(line, 1):
                     direction = symbol_map.get(char)
                     if direction:
-                        f_out.write(f'thermometer({r}, {c}, "{direction}").\n')
+                        f_out.write(f'thermometer({r}, {c}, {direction}).\n')
 
             # Add column and row facts
             col_sums = col_sum_line.split()
