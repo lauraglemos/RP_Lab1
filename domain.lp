@@ -8,9 +8,11 @@ cell(1..n, 1..n).
 % Define filled cells
 m {filled(X,Y) : cell(X, Y)} m.
 
-orientation(R;U;L;D).
+% Upper case for heads, lower case for bodies
+orientation(R;U;L;D;r;u;l;d).
 
 k {thermometer(X,Y,O) : cell(X,Y), orientation(O)} k.
+
 
 % Define column and row numbers (this will be created automatically)
 col(1, 3). col(2, 2). col(3, 1). col(4, 1).
