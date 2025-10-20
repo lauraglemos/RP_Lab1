@@ -12,8 +12,9 @@
 % definimos cada termómetro -> (bola{1,0}, orientacion{R,U,L,D},longitud{2,n})
 
 
-longitude(1..n).
-bole(0;1).
-orientation(R;U;L;D)
+
+% longitude(1..n).
+% head(0;1).
+% orientation(R;U;L;D)
 
 
