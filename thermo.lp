@@ -23,6 +23,10 @@ is_body(X,Y) :- thermometer(X,Y,O), O = r; O = u; O = l; O = d.
 % Head can always be filled
 
 % Body can be filled if the previous cell is filled
+:- is_body(X,Y), thermometer(X,Y,O), O = r, filled(X,Y), not filled(X-1,Y).
+:- is_body(X,Y), thermometer(X,Y,O), O = u, filled(X,Y), not filled(X,Y-1).
+:- is_body(X,Y), thermometer(X,Y,O), O = l, filled(X,Y), not filled(X+1,Y).
+:- is_body(X,Y), thermometer(X,Y,O), O = d, filled(X,Y), not filled(X,Y+1).
 
 % Filled columns should match the col constraints
 
