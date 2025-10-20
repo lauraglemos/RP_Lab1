@@ -14,13 +14,17 @@
 % Define filled cells
 { filled(X,Y) } :- cell(X,Y).
 
-% Body can be filled if the previous cell is filled
-:- thermometer(X,Y,r_body), filled(X,Y), not filled(X-1,Y), X > 1.
-:- thermometer(X,Y,u_body), filled(X,Y), not filled(X,Y+1), Y < n.
-:- thermometer(X,Y,l_body), filled(X,Y), not filled(X+1,Y), X < n.
-:- thermometer(X,Y,d_body), filled(X,Y), not filled(X,Y-1), Y > 1.
-% Number of filled columns should match the col constraints
+% Cuerpo 'derecha' (>) en (X,Y) -> requiere (X, Y-1)
+:- thermometer(X,Y,r_body), filled(X,Y), not filled(X, Y-1), Y > 1.
 
+% Cuerpo 'arriba' (^) en (X,Y) -> requiere (X+1, Y)
+:- thermometer(X,Y,u_body), filled(X,Y), not filled(X+1, Y), X < n.
+
+% Cuerpo 'izquierda' (<) en (X,Y) -> requiere (X, Y+1)
+:- thermometer(X,Y,l_body), filled(X,Y), not filled(X, Y+1), Y < n.
+
+% Cuerpo 'abajo' (v) en (X,Y) -> requiere (X-1, Y)
+:- thermometer(X,Y,d_body), filled(X,Y), not filled(X-1, Y), X > 1.
 :- col(Y,C), C != #count { X : filled(X,Y) }.
 % C { filled(X,Y) : row(X) } C :- col(Y,C).
 
