@@ -38,28 +38,30 @@ def convert_map_to_facts(input_file, output_file):
             f_out.write(f"#const m = {filled_cells}.\n")
             f_out.write(f"#const k = {therm_num}.\n")
 
+            f_out.write(f"dim({n}).\n")
+
             # Add cells
-            for i in range(1,n+1):
-                for j in range(1,n+1):
+            for i in range(0,n):
+                for j in range(0,n):
                     f_out.write(f"cell({i},{j}).\n")
 
             # Add orientation fact
             f_out.write("orientation(r;u;l;d;r_body;u_body;l_body;d_body).\n")
 
             # Add thermometer facts
-            for r, line in enumerate(board_lines, 1):
-                for c, char in enumerate(line, 1):
+            for r, line in enumerate(board_lines):
+                for c, char in enumerate(line):
                     direction = symbol_map.get(char)
                     if direction:
                         f_out.write(f'thermometer({r}, {c}, {direction}).\n')
 
             # Add column and row facts
             col_sums = col_sum_line.split()
-            for c, total in enumerate(col_sums, 1):
+            for c, total in enumerate(col_sums):
                 f_out.write(f'col({c}, {total}).\n')
 
             row_sums = row_sum_line.split()
-            for r, total in enumerate(row_sums, 1):
+            for r, total in enumerate(row_sums):
                 f_out.write(f'row({r}, {total}).\n')
 
             

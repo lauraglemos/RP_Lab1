@@ -12,29 +12,29 @@
 % definimos cada termómetro -> (bola{1,0}, orientacion{R,U,L,D},longitud{2,n})
 
 % Define filled cells
-{ filled(X,Y) } :- cell(X,Y).
+{ fill(X,Y) } :- cell(X,Y).
 
 % Cuerpo 'derecha' (>) en (X,Y) -> requiere (X, Y-1)
-:- thermometer(X,Y,r_body), filled(X,Y), not filled(X, Y-1), Y > 1.
+:- thermometer(X,Y,r_body), fill(X,Y), not fill(X, Y-1), Y > 1.
 
 % Cuerpo 'arriba' (^) en (X,Y) -> requiere (X+1, Y)
-:- thermometer(X,Y,u_body), filled(X,Y), not filled(X+1, Y), X < n.
+:- thermometer(X,Y,u_body), fill(X,Y), not fill(X+1, Y), X < n.
 
 % Cuerpo 'izquierda' (<) en (X,Y) -> requiere (X, Y+1)
-:- thermometer(X,Y,l_body), filled(X,Y), not filled(X, Y+1), Y < n.
+:- thermometer(X,Y,l_body), fill(X,Y), not fill(X, Y+1), Y < n.
 
 % Cuerpo 'abajo' (v) en (X,Y) -> requiere (X-1, Y)
-:- thermometer(X,Y,d_body), filled(X,Y), not filled(X-1, Y), X > 1.
-:- col(Y,C), C != #count { X : filled(X,Y) }.
-% C { filled(X,Y) : row(X) } C :- col(Y,C).
+:- thermometer(X,Y,d_body), fill(X,Y), not fill(X-1, Y), X > 1.
+% :- col(Y,C), C != #count { X : fill(X,Y) }.
+ C { fill(X,Y) : row(X,_) } C :- col(Y,C).
 
 
 % Number of filled rows should match the row constraints
-:- row(X,C), C != #count { Y : filled(X,Y) }.
-% R { filled(X,Y) : col(Y) } R :- row(X,R).
+% :- row(X,C), C != #count { Y : fill(X,Y) }.
+ R { fill(X,Y) : col(Y,_) } R :- row(X,R).
 
 #show .
-#show filled/2.
+#show fill/2.
 
 % longitude(1..n).
 % head(0;1).
