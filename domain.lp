@@ -227,7 +227,7 @@ cell(14,11).
 cell(14,12).
 cell(14,13).
 cell(14,14).
-orientation(r_tip;u_tip;l_tip;d_tip;r_body;u_body;l_body;d_body).
+orientation(r_tip;u_tip;l_tip;d_tip;r_body;u_body;l_body;d_body;tr_turn;br_turn;bl_turn;tl_turn).
 thermometer(0, 0, d_tip).
 thermometer(0, 1, d_tip).
 thermometer(0, 2, l_body).
