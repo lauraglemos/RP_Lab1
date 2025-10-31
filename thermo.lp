@@ -3,7 +3,19 @@
 % Define filled cells
 { fill(X,Y) } :- thermometer(X,Y,O).
 
-:- fill(X,Y), not thermometer(X,Y,_).
+
+% Up-bulb (U): flow is from (X,Y) to (X-1,Y)
+:- thermometer(X,Y,u_head), not fill(X,Y), fill(X-1,Y), X > 0.
+
+% Down-bulb (D): flow is from (X,Y) to (X+1,Y)
+:- thermometer(X,Y,d_head), not fill(X,Y), fill(X+1,Y), X < n-1.
+
+% Left-bulb (L): flow is from (X,Y) to (X,Y-1)
+:- thermometer(X,Y,l_head), not fill(X,Y), fill(X,Y-1), Y > 0.
+
+% Right-bulb (R): flow is from (X,Y) to (X,Y+1)
+:- thermometer(X,Y,r_head), not fill(X,Y), fill(X,Y+1), Y < n-1.
+
 
 % Body right (>)
 :- thermometer(X,Y,r_body), fill(X,Y), not fill(X, Y-1), Y > 0.
@@ -36,6 +48,8 @@
 :- thermometer(X,Y,tl_turn), fill(X,Y), not fill(X-1,Y), not fill(X,Y-1), X > 0, Y > 0.
 
 
+
+
 % Number of filled columns should match the column constraints
  :- col(Y,C), C != #count { X : fill(X,Y) }.
 
@@ -44,6 +58,10 @@
 
 #show .
 #show fill/2.
+
+
+
+
 
 
 
